@@ -12,8 +12,8 @@ class Config:
     LR: float = 1e-3
     WEIGHT_BIT: int = 8
     DEVICE_BIT: int = 2
-    EPOCH: int = 200
-    MC_times: int = 1000
+    EPOCH: int = 5
+    MC_times: int = 10
 
 
 # s-rate for different devices

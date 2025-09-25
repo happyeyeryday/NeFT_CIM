@@ -61,4 +61,33 @@ def train_fn_ovf(args, model, device, train_loader, optimizer, criterion, beta):
     epoch_loss = running_loss / len(train_loader)
     return epoch_loss
 
+def elbo_loss(output, target, kl_divergence, criterion, num_samples, kl_weight=1e-5):
+    """计算ELBO损失"""
+    likelihood_loss = criterion(output, target)
+    kl_loss = kl_divergence / num_samples
+    total_loss = likelihood_loss + kl_weight * kl_loss
+    return total_loss, likelihood_loss, kl_loss
+
+def train_fn_bnn(model, device, train_loader, optimizer, criterion, kl_weight=1e-5):
+    """BNN训练函数"""
+    model.train()
+    running_loss = 0.0
+    num_samples = len(train_loader.dataset)
+    
+    for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.to(device), target.to(device)
+        optimizer.zero_grad()
+        
+        output = model(data)
+        kl_div = model.kl_divergence()
+        
+        loss, likelihood_loss, kl_loss = elbo_loss(
+            output, target, kl_div, criterion, num_samples, kl_weight
+        )
+        
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+    
+    return running_loss / len(train_loader)
 

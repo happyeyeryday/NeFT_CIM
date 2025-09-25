@@ -1,0 +1,4 @@
+Method,Mean Accuracy (%),Std Deviation (%),Best Run (%),Worst Run (%),Number of Runs
+BASE,65.26,0.00,65.26,65.26,1
+OVF,72.65,0.00,72.65,72.65,1
+IRS,70.37,0.00,70.37,70.37,1
